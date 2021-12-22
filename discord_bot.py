@@ -21,7 +21,7 @@ async def on_message(message):
         if len(message.attachments) != 0:
             length = len(message.attachments)
             content = '\n' + message.author.display_name + \
-                ': \n' + message.content + '\nFile URL: \n'
+                ': \n' + message.content + '\nFile URL:'
             for i in range(length):
                 content += ('\n\n' + message.attachments[i].url)
             file = {
@@ -30,13 +30,13 @@ async def on_message(message):
             return send_message(file)
         else:
             file = {
-                'message': '\n' + message.author.display_name + ': \n' + message.content
+                'message': '\n' + message.author.display_name + ': \n\n' + message.content
             }
             return send_message(file)
     else:
         if len(message.attachments) != 0:
             length = len(message.attachments)
-            content = '\n' + message.author.display_name + ': \n' + '\nFile URL: \n'
+            content = '\n' + message.author.display_name + ': \n\n' + '\nFile URL:'
             for i in range(length):
                 content += ('\n\n' + message.attachments[i].url)
             file = {
