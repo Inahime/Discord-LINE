@@ -29,9 +29,9 @@ Heroku で動作させることを想定しています.
 
    - LINE bot のチャンネルアクセストークン
    - LINE bot のチャンネルシークレット
-   - LINE Notify のトークン
    - Discord の Webhook URL
    - Discord bot のアクセストークン
+   - 送信したい LINE のグループ ID (個人で使うならユーザ ID でも OK)
    - Heroku 上でのアプリ名
      <br>
      <br>
