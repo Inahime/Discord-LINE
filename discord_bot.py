@@ -1,14 +1,16 @@
 import discord
 import dotenv
+import json
 import os
 import requests
 
 client = discord.Client()
 
-# 環境変数取得
+# Discord, LINE, Group ID
 dotenv.load_dotenv()
+CHANNEL_ACCESS_TOKEN = os.environ['CHANNEL_ACCESS_TOKEN']
 DISCORD_ACCESS_TOKEN = os.environ['DISCORD_ACCESS_TOKEN']
-LINE_NOTIFY_TOKEN = os.environ['LINE_NOTIFY_TOKEN']
+LINE_GROUP_ID = os.environ['LINE_GROUP_ID']
 
 
 @client.event
@@ -17,46 +19,55 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    if len(message.content) != 0:
-        if len(message.attachments) != 0:
-            length = len(message.attachments)
-            content = '\n' + message.author.display_name + \
-                ': \n' + message.content + '\n\nFile URL:' + \
-                '\n' + message.attachments[0].url
-            for i in range(length-1):
-                content += ('\n\n' + message.attachments[i+1].url)
-            file = {
-                'message': content
-            }
-            return send_message(file)
-        else:
-            file = {
-                'message': '\n' + message.author.display_name + ': \n' + message.content
-            }
-            return send_message(file)
-    else:
-        if len(message.attachments) != 0:
-            length = len(message.attachments)
-            content = '\n' + message.author.display_name + ': \n' + \
-                '\nFile URL:' + '\n' + message.attachments[0].url
-            for i in range(length-1):
-                content += ('\n\n' + message.attachments[i+1].url)
-            file = {
-                'message': content
-            }
-            return send_message(file)
-        else:
-            return
+    post_to_line(message)
 
 
-def send_message(file):
-
-    headers = {
-        'Authorization': 'Bearer ' + LINE_NOTIFY_TOKEN,
+def post_to_line(msg):
+    content = format_content(msg)
+    message = {
+        'to': LINE_GROUP_ID,
+        'messages': content
     }
-    files = file
-    requests.post('https://notify-api.line.me/api/notify',
-                  headers=headers, data=files)
+
+    headers = {'Content-Type': 'application/json',
+               'Authorization': 'Bearer ' + CHANNEL_ACCESS_TOKEN}
+
+    requests.post('https://api.line.me/v2/bot/message/push',
+                  data=json.dumps(message), headers=headers)
+
+
+def format_content(message):
+    content = [
+        {
+            'type': 'text',
+            'text': message.author.display_name + ' sent on Discord'
+        }
+    ]
+
+    if len(message.content) != 0:
+        content.append(
+            {'type': 'text',
+             'text': message.content},
+        )
+
+    if len(message.attachments) != 0:
+        roop = len(message.attachments)
+        for i in range(roop):
+            content_type = message.attachments[i].content_type
+            if 'image' in content_type:
+                content.append(
+                    {'type': 'image',
+                     'originalContentUrl': message.attachments[i].url,
+                     'previewImageUrl': message.attachments[i].url}
+                )
+            elif 'video' in content_type:
+                content.append(
+                    {'type': 'video',
+                     'originalContentUrl': message.attachments[i].url,
+                     'previewImageUrl': message.attachments[i].url}
+                )
+
+    return content
 
 
 client.run(DISCORD_ACCESS_TOKEN)
