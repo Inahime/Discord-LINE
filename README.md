@@ -1,4 +1,6 @@
 ## 概要
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FInahime%2FDiscord-LINE.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FInahime%2FDiscord-LINE?ref=badge_shield)
+
 
 Discord と LINE で相互にメッセージを送りあう bot (Python) です.  
 Heroku で動作させることを想定しています.
@@ -47,3 +49,7 @@ Heroku で動作させることを想定しています.
 ### Twitter
 
 [@Inahime1006](https://twitter.com/Inahime1006)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FInahime%2FDiscord-LINE.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FInahime%2FDiscord-LINE?ref=badge_large)
